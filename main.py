@@ -14,7 +14,15 @@ buy_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
 buy_key = telebot.types.KeyboardButton(text='Проверить статус оплаты')
 buy_keyboard.row(buy_key, basic_key)
 
-
+end_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
+end_key1 =telebot.types.KeyboardButton(text='Кредит')
+end_key2 =telebot.types.KeyboardButton(text='Без чека')
+end_key3 =telebot.types.KeyboardButton(text='Уже продано')
+end_key4 =telebot.types.KeyboardButton(text='>2 лет')
+end_key5 =telebot.types.KeyboardButton(text='Скам')
+end_keyboard.row(end_key1,end_key2)
+end_keyboard.row(end_key3,end_key4)
+end_keyboard.row(end_key5, basic_key)
 
 stat_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
 stat_key1 = telebot.types.KeyboardButton(text='Показать последнюю покупку')
@@ -44,7 +52,7 @@ order_keyboard.row(basic_key)
 
 welcome_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
 welcome_key1 = telebot.types.KeyboardButton(text='Найти не занятый телефон')
-welcome_key2 = telebot.types.KeyboardButton(text='Посмотреть историю по телефонам')
+welcome_key2 = telebot.types.KeyboardButton(text='Завершить телефон')
 welcome_key3 = telebot.types.KeyboardButton(text='Как юзать бота?')
 welcome_keyboard.row(welcome_key1, welcome_key2)
 welcome_keyboard.row(welcome_key3)
@@ -71,7 +79,7 @@ admin_spam_key1 = telebot.types.KeyboardButton(text='/start')
 admin_spam_key2 = telebot.types.KeyboardButton(text='/back')
 admin_spam_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
 admin_spam_keyboard.row(admin_spam_key1, admin_spam_key2)
-bot = telebot.TeleBot('1827319074:AAE8YS7qzM2r9dkD22yVLPe28_FitbXoKVg')
+bot = telebot.TeleBot('1651913511:AAEmCMBMvUd5FP3DLbbOA3Ub-J2uulpglf4')
 TgLib.create_get_user_info_database('TestTelegramBd')
 AvitoParser.avito_db()
 # start
@@ -81,10 +89,10 @@ AvitoParser.avito_db()
 def send_welcome(message):
     TgLib.get_user_info(bot, message)
     if message.text:
-        if message.chat.id == 1421340487:
+        if message.chat.id == 14213404875:
             while True:
                 AvitoParser.avito('https://www.avito.ru/moskva/telefony/mobile-ASgBAgICAUSwwQ2I_Dc?cd=1&s=104', bot)
-                time.sleep(100)
+                time.sleep(300)
         gg = bot.send_message(message.chat.id, 'Сюда бот спамит новыми постави в авито\n'
                                                'Это называется рассылка епта\n',
                               reply_markup=welcome_keyboard)
@@ -92,17 +100,74 @@ def send_welcome(message):
 def menu_panel(message):
     TgLib.get_user_info(bot, message)
     if message.text == 'Найти не занятый телефон' or message.text == 'найти не занятый телефон':
+        AvitoParser.avito_print(message.chat.id, bot)
         gg = bot.send_message(message.chat.id, 'Мы DI company\n'
                                                'Ты долбаеб')
         bot.register_next_step_handler(gg, menu_panel)
-    elif message.text == 'Посмотреть историю по телефонам' or message.text == 'посмотреть историю по телефонам':
-        gg = bot.send_message(message.chat.id, 'Мы DI company\n'
-                                               'Мы заскамим весь мир!')
-        bot.register_next_step_handler(gg, menu_panel)
+    elif message.text == 'Завершить телефон' or message.text == 'завершить телефон':
+        gg = bot.send_message(message.chat.id, 'Чтобы сдать текущий заказ - просто оставьте комментарий\n'
+                                               '\n'
+                                               'Чтобы выйти из этой вкладки в главное меню - нажмите кнопку "Назад"', reply_markup = end_keyboard)
+        bot.register_next_step_handler(gg, end_panel)
     elif message.text == 'Как юзать бота?' or message.text == 'как юзать бота?':
-        gg = bot.send_message(message.chat.id, 'Мы DI company\n'
-                                               'Притворись мамонтом, чтобы мы заскамили весь мир!')
+        gg = bot.send_message(message.chat.id, 'Чтобы занять телефон - напишите ссылку боту\n'
+                                               '\n'
+                                               'Занять можно только 1 телефон\n'
+                                               'Чтобы занять следующий телефон - нужно сначала завершить текущий\n'
+                                               '\n'
+                                               'Чтобы завершить телефон - нажмите на кнопку и ОБЯЗВТЕЛЬНО оставьте комментарий по заказу\n'
+                                               '\n'
+                                               'И САМОЕ ГЛАВНОЕ ЗАПОМНИ КТО ПОСМЕЕТ ОСТАНОВИТЬ БОТА СТАНЕТ СО-СПОНСОРОМ ОПЕН КЕЙСА В БРАВЛ СТАРС\n'
+                                               'Мне до сих пор сука не выпол лион, но это мы скоро поправим')
         bot.register_next_step_handler(gg, menu_panel)
+    elif not message.text:
+        gg = bot.send_message(message.chat.id, '\nЯ не знаю что ты сделал с ботом, но ты ЕБЛАН\n')
+        bot.register_next_step_handler(gg, menu_panel)
+    elif str.find(message.text, 'https://') != -1:
+        temp = AvitoParser.avito_check(message.text, message.chat.id, bot)
+        if temp == 0:
+            gg = bot.send_message(message.chat.id,
+                                  '\nНеверная ссылка\n')
+            bot.register_next_step_handler(gg, menu_panel)
+        elif temp == 2:
+            gg = bot.send_message(message.chat.id,
+                                  '\nЭтот телефон уже занят либо завершен\n')
+            bot.register_next_step_handler(gg, menu_panel)
+        elif temp == 1:
+            gg = bot.send_message(message.chat.id,
+                                  '\nЗаказ успешно занят\n')
+            bot.register_next_step_handler(gg, menu_panel)
+        elif temp == 3:
+            gg = bot.send_message(message.chat.id,
+                                  '\nСИСТЕМУ НЕ ОБМАНЕШЬ - ИДИ РАБОТАТЬ\nЕЩЕ РАЗ ПОПРОБУЕШЬ ВЗЯТЬ 2 ЗАКАЗА СРАЗУ СТАНЕШЬ СПОНСОРОМ ОПЕН КЕЙСА В БРАВЛ СТАРС\n')
+            bot.register_next_step_handler(gg, menu_panel)
+    elif str.find(message.text, 'https://') == -1:
+        gg = bot.send_message(message.chat.id, '\nНеверная ссылка\n')
+        bot.register_next_step_handler(gg, menu_panel)
+    elif message:
+        gg = bot.send_message(message.chat.id, '\nЯ не знаю что ты сделал с ботом, но ты ЕБЛАН\n')
+        bot.register_next_step_handler(gg, menu_panel)
+
+
+def end_panel(message):
+    if message.text == 'Назад' or message.text == 'назад':
+        gg = bot.send_message(message.chat.id,
+                              '\nВозврат в главное меню\n', reply_markup=welcome_keyboard)
+        bot.register_next_step_handler(gg, menu_panel)
+    elif not message.text:
+        gg = bot.send_message(message.chat.id,
+                              '\nЯ не знаю что ты сделал с ботом, но ты ЕБЛАН\n', reply_markup=welcome_keyboard)
+        bot.register_next_step_handler(gg, menu_panel)
+    elif message.text:
+        temp = AvitoParser.avito_done(message.chat.id, message.text, bot)
+        if temp == 1:
+            gg = bot.send_message(message.chat.id,
+                                  '\nНету у тебя никаких активных трубок\n', reply_markup=welcome_keyboard)
+            bot.register_next_step_handler(gg, menu_panel)
+        elif temp == 2:
+            gg = bot.send_message(message.chat.id,
+                                  '\nГотово, МУЖИК СПАСИБО ЗА РАБОТУ\n', reply_markup=welcome_keyboard)
+            bot.register_next_step_handler(gg, menu_panel)
 #############################
 
 
