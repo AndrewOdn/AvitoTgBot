@@ -79,7 +79,7 @@ admin_spam_key1 = telebot.types.KeyboardButton(text='/start')
 admin_spam_key2 = telebot.types.KeyboardButton(text='/back')
 admin_spam_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
 admin_spam_keyboard.row(admin_spam_key1, admin_spam_key2)
-bot = telebot.TeleBot('1651913511:AAEmCMBMvUd5FP3DLbbOA3Ub-J2uulpglf4')
+bot = telebot.TeleBot('1827319074:AAE8YS7qzM2r9dkD22yVLPe28_FitbXoKVg')
 TgLib.create_get_user_info_database('TestTelegramBd')
 AvitoParser.avito_db()
 # start
@@ -89,7 +89,7 @@ AvitoParser.avito_db()
 def send_welcome(message):
     TgLib.get_user_info(bot, message)
     if message.text:
-        if message.chat.id == 14213404875:
+        if message.chat.id == 1421340487:
             while True:
                 AvitoParser.avito('https://www.avito.ru/moskva/telefony/mobile-ASgBAgICAUSwwQ2I_Dc?cd=1&s=104', bot)
                 time.sleep(300)
@@ -101,8 +101,8 @@ def menu_panel(message):
     TgLib.get_user_info(bot, message)
     if message.text == 'Найти не занятый телефон' or message.text == 'найти не занятый телефон':
         AvitoParser.avito_print(message.chat.id, bot)
-        gg = bot.send_message(message.chat.id, 'Мы DI company\n'
-                                               'Ты долбаеб')
+        gg = bot.send_message(message.chat.id, 'РАБОТАЙ МАМОНТ\n'
+                                               'РАБОТААААААААААЙ')
         bot.register_next_step_handler(gg, menu_panel)
     elif message.text == 'Завершить телефон' or message.text == 'завершить телефон':
         gg = bot.send_message(message.chat.id, 'Чтобы сдать текущий заказ - просто оставьте комментарий\n'
@@ -134,6 +134,7 @@ def menu_panel(message):
                                   '\nЭтот телефон уже занят либо завершен\n')
             bot.register_next_step_handler(gg, menu_panel)
         elif temp == 1:
+
             gg = bot.send_message(message.chat.id,
                                   '\nЗаказ успешно занят\n')
             bot.register_next_step_handler(gg, menu_panel)
