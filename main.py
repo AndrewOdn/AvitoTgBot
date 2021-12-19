@@ -4,7 +4,9 @@ import time
 import telebot
 import sys
 import TgLib
+#my file with all telegram functions
 import AvitoParser
+#my file with all avito functions
 basic_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
 basic_key = telebot.types.KeyboardButton(text='Назад')
 basic_keyboard.row(basic_key)
@@ -79,7 +81,7 @@ admin_spam_key1 = telebot.types.KeyboardButton(text='/start')
 admin_spam_key2 = telebot.types.KeyboardButton(text='/back')
 admin_spam_keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=5)
 admin_spam_keyboard.row(admin_spam_key1, admin_spam_key2)
-bot = telebot.TeleBot('1827319074:AAE8YS7qzM2r9dkD22yVLPe28_FitbXoKVg')
+bot = telebot.TeleBot('')
 TgLib.create_get_user_info_database('TestTelegramBd')
 AvitoParser.avito_db()
 # start
